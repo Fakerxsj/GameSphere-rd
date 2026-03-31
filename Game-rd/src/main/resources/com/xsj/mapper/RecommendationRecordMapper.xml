@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xsj.mapper.RecommendationRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.xsj.entity.RecommendationRecord">
+            <id property="id" column="id" />
+            <result property="userId" column="user_id" />
+            <result property="algorithm" column="algorithm" />
+            <result property="gameIds" column="game_ids" />
+            <result property="scoreMatrix" column="score_matrix" />
+            <result property="reason" column="reason" />
+            <result property="createTime" column="create_time" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,user_id,algorithm,game_ids,score_matrix,reason,
+        create_time
+    </sql>
+</mapper>

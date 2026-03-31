@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xsj.mapper.UserBehaviorMapper">
+
+    <resultMap id="BaseResultMap" type="com.xsj.entity.UserBehavior">
+            <id property="id" column="id" />
+            <result property="userId" column="user_id" />
+            <result property="gameId" column="game_id" />
+            <result property="behaviorType" column="behavior_type" />
+            <result property="behaviorTime" column="behavior_time" />
+            <result property="duration" column="duration" />
+            <result property="device" column="device" />
+            <result property="ipAddress" column="ip_address" />
+            <result property="extraData" column="extra_data" />
+            <result property="createTime" column="create_time" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,user_id,game_id,behavior_type,behavior_time,duration,
+        device,ip_address,extra_data,create_time
+    </sql>
+</mapper>
