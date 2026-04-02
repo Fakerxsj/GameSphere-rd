@@ -49,9 +49,15 @@ public class Game {
 
     private Integer downloadCount;
 
+    private Integer commentCount;
+
     private String description;
 
     private String officialWebsite;
+
+    private String videoUrl;
+
+    private String trailerUrl;
 
     private String sourceUrl;
 
@@ -62,6 +68,8 @@ public class Game {
     private Integer isRecommend;
 
     private Integer recommendWeight;
+
+
 
     private Date createTime;
 

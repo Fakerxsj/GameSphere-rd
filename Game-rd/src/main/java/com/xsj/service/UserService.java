@@ -2,6 +2,7 @@ package com.xsj.service;
 
 import com.xsj.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
 * @author 28227
@@ -10,4 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface UserService extends IService<User> {
 
+    @Transactional(rollbackFor = Exception.class)
+    void updateLastLogin(Long userId, String ip);
 }

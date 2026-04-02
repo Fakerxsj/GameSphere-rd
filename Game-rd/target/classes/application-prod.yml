@@ -1,0 +1,90 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/sm_db?useUnicode=true&characterEncoding=utf8&useSSL=true&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=false&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: xsj123...
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 10
+      maximum-pool-size: 50
+      auto-commit: false
+      idle-timeout: 600000
+      pool-name: HikariPool-Prod
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+      validation-timeout: 5000
+      leak-detection-threshold: 60000
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: your_redis_password_secure
+      database: 0
+      timeout: 3000ms
+      lettuce:
+        pool:
+          max-active: 50
+          max-idle: 20
+          min-idle: 10
+          max-wait: 2000ms
+
+  cache:
+    type: redis
+    redis:
+      time-to-live: 1800000
+      cache-null-values: false
+      key-prefix: 'prod:'
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+  global-config:
+    banner: false
+
+logging:
+  level:
+    root: WARN
+    com.xsj: INFO
+    com.xsj.mapper: INFO
+    org.springframework.web: WARN
+    org.springframework.security: WARN
+  pattern:
+    file: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{50} - %msg%n'
+  file:
+    name: /var/log/GameSphere/application.log
+  logback:
+    rollingpolicy:
+      max-file-size: 100MB
+      max-history: 60
+      total-size-cap: 5GB
+
+springdoc:
+  swagger-ui:
+    enabled: false
+  api-docs:
+    enabled: false
+
+jwt:
+  secret: Your-Very-Strong-Production-Secret-Key-Change-This-In-Real-Production
+  expiration: 604800000
+
+file:
+  upload:
+    path: E:/GameSphere-Client/uploads/
+    avatar-path: ${file.upload.path}avatar/
+    game-path: ${file.upload.path}games/
+
+crawler:
+  enabled: true
+  user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+  timeout: 20000
+  delay: 2000
+  max-retry: 2
+
+recommendation:
+  enabled: true
+  cache-expire: 1800
+  min-games: 300

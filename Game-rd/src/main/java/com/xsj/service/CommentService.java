@@ -2,6 +2,7 @@ package com.xsj.service;
 
 import com.xsj.entity.Comment;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
 * @author 28227
@@ -10,4 +11,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface CommentService extends IService<Comment> {
 
+    @Transactional(rollbackFor = Exception.class)
+    void incrementReplyCount(Long commentId);
+
+    @Transactional(rollbackFor = Exception.class)
+    void incrementLikeCount(Long commentId);
 }

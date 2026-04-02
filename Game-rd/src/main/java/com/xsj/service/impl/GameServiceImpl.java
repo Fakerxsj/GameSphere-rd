@@ -2,21 +2,45 @@ package com.xsj.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xsj.entity.Game;
+import com.xsj.entity.UserBehavior;
 import com.xsj.service.GameService;
 import com.xsj.mapper.GameMapper;
+import com.xsj.service.UserBehaviorService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-/**
-* @author 28227
-* @description 针对表【game(游戏表)】的数据库操作Service实现
-* @createDate 2026-03-31 10:06:07
-*/
 @Service
+@RequiredArgsConstructor
 public class GameServiceImpl extends ServiceImpl<GameMapper, Game>
-    implements GameService{
+        implements GameService {
 
+    private final UserBehaviorService userBehaviorService;
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void recordClick(Long gameId, Long userId) {
+        UserBehavior behavior = new UserBehavior();
+        behavior.setUserId(userId);
+        behavior.setGameId(gameId);
+        behavior.setBehaviorType("click");
+        behavior.setBehaviorTime(new java.util.Date());
+        userBehaviorService.save(behavior);
+
+        Game game = getById(gameId);
+        if (game != null) {
+            game.setDownloadCount(game.getDownloadCount() + 1);
+            updateById(game);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void incrementFollowCount(Long gameId) {
+        Game game = getById(gameId);
+        if (game != null) {
+            game.setFollowCount(game.getFollowCount() + 1);
+            updateById(game);
+        }
+    }
 }
-
-
-
-

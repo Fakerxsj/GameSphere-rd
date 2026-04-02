@@ -2,6 +2,7 @@ package com.xsj.service;
 
 import com.xsj.entity.Game;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
 * @author 28227
@@ -10,4 +11,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface GameService extends IService<Game> {
 
+    @Transactional(rollbackFor = Exception.class)
+    void recordClick(Long gameId, Long userId);
+
+    @Transactional(rollbackFor = Exception.class)
+    void incrementFollowCount(Long gameId);
 }

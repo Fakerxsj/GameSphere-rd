@@ -2,6 +2,7 @@ package com.xsj.mapper;
 
 import com.xsj.entity.SystemLog;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
 * @author 28227
@@ -9,6 +10,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @createDate 2026-03-31 10:06:07
 * @Entity com.xsj.pojo.SystemLog
 */
+@Mapper
 public interface SystemLogMapper extends BaseMapper<SystemLog> {
 
 }
