@@ -51,4 +51,14 @@ public class CrawlerManager {
             throw new CrawlerException("游戏详情爬取失败：" + e.getMessage(), detailUrl);
         }
     }
+
+    public List<String> extractTagsFromDetail(String detailUrl) throws CrawlerException {
+        log.info("开始从详情页提取标签：{}", detailUrl);
+        try {
+            return tapTapCrawler.extractTagsFromDetail(detailUrl);
+        } catch (Exception e) {
+            log.error("提取标签失败", e);
+            throw new CrawlerException("标签提取失败：" + e.getMessage(), detailUrl);
+        }
+    }
 }

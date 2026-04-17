@@ -36,6 +36,8 @@ public class User {
 
     private Integer status;
 
+    private Integer igdbCrawlOffset;
+
     private Date lastLoginTime;
 
     private String lastLoginIp;

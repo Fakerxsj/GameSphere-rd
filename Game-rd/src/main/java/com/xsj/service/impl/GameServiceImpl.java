@@ -43,4 +43,15 @@ public class GameServiceImpl extends ServiceImpl<GameMapper, Game>
             updateById(game);
         }
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void recordView(Long gameId, Long userId) {
+        UserBehavior behavior = new UserBehavior();
+        behavior.setUserId(userId);
+        behavior.setGameId(gameId);
+        behavior.setBehaviorType("view");
+        behavior.setBehaviorTime(new java.util.Date());
+        userBehaviorService.save(behavior);
+    }
 }

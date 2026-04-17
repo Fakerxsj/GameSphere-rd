@@ -16,8 +16,6 @@ spring:
     static-path-pattern: /**
   application:
     name: GameSphere
-  profiles:
-    active: dev
   jackson:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss
@@ -34,10 +32,27 @@ spring:
         max-size: 50
         queue-capacity: 100
       thread-name-prefix: async-task-
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/sm_db?useUnicode=true&characterEncoding=utf8&useSSL=true&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=false&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: xsj123...
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 10
+      maximum-pool-size: 50
+      auto-commit: false
+      idle-timeout: 600000
+      pool-name: HikariPool-Dev
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+      validation-timeout: 5000
+      leak-detection-threshold: 60000
 
 mybatis-plus:
-  mapper-locations: classpath*:/mapper/**/*.xml
-  type-aliases-package: com.xsj.pojo
+  mapper-locations: classpath*:/com/xsj/mapper/**/*.xml
+  type-aliases-package: com.xsj.entity
   configuration:
     map-underscore-to-camel-case: true
     cache-enabled: false
@@ -52,6 +67,7 @@ mybatis-plus:
       logic-not-delete-value: 0
     banner: false
 
+
 # JWT 配置
 jwt:
   secret: GameSphere-Secret-Key-2026-Change-In-Production
@@ -63,17 +79,20 @@ jwt:
 logging:
   level:
     root: INFO
-    com.xsj: DEBUG
-    com.xsj.mapper: DEBUG
+    com.xsj: INFO
     org.springframework.web: INFO
     org.springframework.security: INFO
+    org.springdoc: INFO
+    com.zaxxer.hikari: WARN
   pattern:
     console: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{50} - %msg%n'
     file: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{50} - %msg%n'
   file:
     name: logs/GameSphere.log
-    max-size: 100MB
-    max-history: 30
+  logback:
+    rollingpolicy:
+      max-file-size: 100MB
+      max-history: 30
 
 # Swagger/OpenAPI 配置
 springdoc:
@@ -81,11 +100,8 @@ springdoc:
     path: /v3/api-docs
     enabled: true
   swagger-ui:
-    path: /swagger-ui.html
+    path: /swagger-ui/index.html
     enabled: true
-    operations-sorter: alpha
-    tags-sorter: alpha
-    use-root-path: true
 
 # 文件上传路径
 file:
@@ -102,6 +118,21 @@ crawler:
   delay: 1000
   max-retry: 3
 
+# IGDB API 配置
+igdb:
+  client-id: qgl0bq4bx1diw5wmiv07upqdn54ucg
+  client-secret: sb117ubhppup2hyi72i9beicdjv5qp
+  base-url: https://api.igdb.com/v4
+  token-url: https://id.twitch.tv/oauth2/token
+  proxy:
+    enabled: true
+    host: 127.0.0.1
+    port: 9674
+
+
+cors:
+  allowed-origin: http://localhost:5173
+
 # 推荐算法配置
 recommendation:
   enabled: true
@@ -117,7 +148,3 @@ recommendation:
     hot-games:
       enabled: true
       weight: 0.2
-
-# Swagger/OpenAPI 配置
-
-# 添加 Swagger 资源处理器配置

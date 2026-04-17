@@ -1,13 +1,15 @@
 package com.xsj.service;
 
-import com.xsj.entity.Category;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.xsj.entity.Category;
+import com.xsj.dto.response.CategoryGamesVO;
+import com.xsj.dto.response.GameBriefVO;
+import java.util.List;
 
-/**
-* @author 28227
-* @description 针对表【category(游戏分类表)】的数据库操作Service
-* @createDate 2026-03-31 10:06:07
-*/
 public interface CategoryService extends IService<Category> {
+    // 从 game 表提取类型并初始化分类数据
+    int initCategoriesFromGames();
 
+    List<CategoryGamesVO> getCategoryGames();
+    List<GameBriefVO> getGamesByCategoryId(Long categoryId, Integer limit, Integer offset);
 }

@@ -2,7 +2,6 @@ package com.xsj.dto.response;
 
 import lombok.Data;
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Data
 public class GameListResponse {
@@ -12,6 +11,10 @@ public class GameListResponse {
     private String name;
 
     private String coverImage;
+
+    private String videoUrl;
+
+    private String trailerUrl;
 
     private String gameType;
 
@@ -27,5 +30,13 @@ public class GameListResponse {
 
     private Integer followCount;
 
+    private Integer downloadCount;
+
     private String briefDescription;
+
+    private String developer;
+
+    private String publisher;
+
+    private String description;
 }

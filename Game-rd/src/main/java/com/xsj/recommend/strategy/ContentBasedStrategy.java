@@ -1,8 +1,12 @@
 package com.xsj.recommend.strategy;
 
 import com.xsj.entity.Game;
+import com.xsj.entity.GameTagRelation;
+import com.xsj.entity.UserBehavior;
 import com.xsj.recommend.model.UserPreferenceModel;
 import com.xsj.service.GameService;
+import com.xsj.service.GameTagRelationService;
+import com.xsj.service.UserBehaviorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -16,6 +20,8 @@ import java.util.stream.Collectors;
 public class ContentBasedStrategy implements RecommendationStrategy {
 
     private final GameService gameService;
+    private final UserBehaviorService userBehaviorService;
+    private final GameTagRelationService gameTagRelationService;
 
     @Override
     public List<Game> recommend(Long userId, Integer limit) {
@@ -29,8 +35,30 @@ public class ContentBasedStrategy implements RecommendationStrategy {
             return Collections.emptyList();
         }
 
+        List<UserBehavior> userBehaviors = userBehaviorService.lambdaQuery()
+                .eq(UserBehavior::getUserId, userId)
+                .orderByDesc(UserBehavior::getBehaviorTime)
+                .last("LIMIT 50")
+                .list();
+
+        Set<Long> viewedGameIds = userBehaviors.stream()
+                .map(UserBehavior::getGameId)
+                .collect(Collectors.toSet());
+
+        Map<Long, Integer> tagPreferenceScore = new HashMap<>();
+        for (Long gameId : viewedGameIds) {
+            List<GameTagRelation> tagRelations = gameTagRelationService.lambdaQuery()
+                    .eq(GameTagRelation::getGameId, gameId)
+                    .list();
+
+            for (GameTagRelation relation : tagRelations) {
+                tagPreferenceScore.merge(relation.getTagId(), 1, Integer::sum);
+            }
+        }
+
         List<Game> allGames = gameService.lambdaQuery()
                 .eq(Game::getStatus, 1)
+                .notIn(!viewedGameIds.isEmpty(), Game::getId, viewedGameIds)
                 .list();
 
         Map<Long, Double> gameScoreMap = new HashMap<>();
@@ -58,6 +86,17 @@ public class ContentBasedStrategy implements RecommendationStrategy {
                 Long count = preferenceModel.getPriceRangePreferences().get(range);
                 if (count != null) {
                     score += count * 1.0;
+                }
+            }
+
+            List<GameTagRelation> gameTags = gameTagRelationService.lambdaQuery()
+                    .eq(GameTagRelation::getGameId, game.getId())
+                    .list();
+
+            for (GameTagRelation relation : gameTags) {
+                Integer tagScore = tagPreferenceScore.get(relation.getTagId());
+                if (tagScore != null) {
+                    score += tagScore * 3.0;
                 }
             }
 

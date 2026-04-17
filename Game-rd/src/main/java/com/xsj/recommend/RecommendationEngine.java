@@ -33,6 +33,12 @@ public class RecommendationEngine {
     @Value("${recommendation.min-games}")
     private Integer minGames;
 
+    public long getUserBehaviorCount(Long userId) {
+        return userBehaviorService.lambdaQuery()
+                .eq(UserBehavior::getUserId, userId)
+                .count();
+    }
+
     public List<Game> recommendForUser(Long userId) {
         log.info("为用户 {} 生成推荐列表", userId);
 

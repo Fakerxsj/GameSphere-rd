@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -356,6 +357,17 @@ public class TapTapCrawler extends AbstractCrawler {
             game.setOfficialWebsite(officialWebsite);
 
             // 基础信息
+            game.setPlatform(platformText);
+
+            String releaseDateTexts = extractText(rootElement, "[class*='release-date'], [class*='launch-date']");
+            game.setReleaseDate(parseDate(releaseDateTexts));
+
+            String officialWebsites = extractAttr(rootElement, "[class*='official'] a, [class*='website'] a", "href");
+            game.setOfficialWebsite(officialWebsites);
+
+            List<String> tagss = extractTexts(rootElement, "[class*='tag'] span, [class*='genre'] span, .tag-item, [class*='label'] span");
+            log.info("解析到的标签列表：{}", tagss);
+
             game.setSourceUrl(detailUrl);
             game.setSourceSite("TapTap");
             game.setStatus(1);
@@ -369,6 +381,7 @@ public class TapTapCrawler extends AbstractCrawler {
             log.info("解析到的视频链接：{}", game.getVideoUrl());
             log.info("解析到的评论数：{}", game.getCommentCount());
             log.info("解析到的下载量：{}", game.getDownloadCount());
+            log.info("解析到的标签：{}", tagss);
 
             if (isValidGame(game)) {
                 log.info("游戏详情爬取成功：{}", game.getName());
@@ -385,6 +398,61 @@ public class TapTapCrawler extends AbstractCrawler {
     }
 // ... existing code ...
 
+
+    public List<String> extractTagsFromDetail(String detailUrl) throws IOException {
+        log.info("从详情页提取标签：{}", detailUrl);
+
+        String html = fetchPage(detailUrl);
+        if (html == null || html.isEmpty()) {
+            log.warn("详情页内容为空，无法提取标签");
+            return new ArrayList<>();
+        }
+
+        Document document = parseDocument(html);
+        Element rootElement = document.body();
+
+        List<String> tags = new ArrayList<>();
+
+        try {
+            Elements tagElements = rootElement.select(
+                    "[class*='tag'] span, " +
+                            "[class*='genre'] span, " +
+                            ".tag-item, " +
+                            "[class*='label'] span, " +
+                            "[data-testid*='tag'], " +
+                            ".game-tag span, " +
+                            "[class*='category'] a"
+            );
+
+            for (Element tagElement : tagElements) {
+                String tagName = tagElement.text().trim();
+                if (tagName != null && !tagName.isEmpty() && tagName.length() < 50) {
+                    tags.add(tagName);
+                }
+            }
+
+            if (tags.isEmpty()) {
+                Elements linkTags = rootElement.select(".tag-list a, .genre-list a");
+                for (Element link : linkTags) {
+                    String tagName = link.text().trim();
+                    if (tagName != null && !tagName.isEmpty() && tagName.length() < 50) {
+                        tags.add(tagName);
+                    }
+                }
+            }
+
+            tags = tags.stream()
+                    .distinct()
+                    .filter(tag -> !tag.contains("更多") && !tag.contains("展开"))
+                    .collect(Collectors.toList());
+
+        } catch (Exception e) {
+            log.error("提取标签失败", e);
+        }
+
+        log.info("从 {} 提取到 {} 个标签：{}", detailUrl, tags.size(), tags);
+        return tags;
+    }
 
 
     /**

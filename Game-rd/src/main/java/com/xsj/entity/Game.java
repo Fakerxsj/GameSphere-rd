@@ -15,6 +15,8 @@ public class Game {
     @TableId
     private Long id;
 
+    private Long igdbId;
+
     private String name;
 
     private String englishName;

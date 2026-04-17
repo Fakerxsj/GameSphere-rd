@@ -88,24 +88,7 @@ public class GameController {
         return ApiResponse.success(pageResponse);
     }
 
-    @GetMapping("/detail/{id}")
-    @Operation(summary = "获取游戏详情")
-    public ApiResponse<?> getGameDetail(@PathVariable Long id) {
-        Game game = gameService.getById(id);
 
-        if (game == null) {
-            return ApiResponse.error(404, "游戏不存在");
-        }
-
-        GameDetailResponse response = new GameDetailResponse();
-        BeanUtils.copyProperties(game, response);
-
-        if (game.getScreenshots() != null) {
-            response.setScreenshots(Arrays.asList(game.getScreenshots().split(",")));
-        }
-
-        return ApiResponse.success(response);
-    }
 
     @GetMapping("/recommend")
     @Operation(summary = "获取推荐游戏列表")
@@ -148,4 +131,30 @@ public class GameController {
 
         return ApiResponse.success(null);
     }
+
+    @GetMapping("/detail/{id}")
+    @Operation(summary = "获取游戏详情")
+    public ApiResponse<?> getGameDetail(@PathVariable Long id, jakarta.servlet.http.HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
+
+        Game game = gameService.getById(id);
+
+        if (game == null) {
+            return ApiResponse.error(404, "游戏不存在");
+        }
+
+        if (userId != null) {
+            gameService.recordView(id, userId);
+        }
+
+        GameDetailResponse response = new GameDetailResponse();
+        BeanUtils.copyProperties(game, response);
+
+        if (game.getScreenshots() != null) {
+            response.setScreenshots(Arrays.asList(game.getScreenshots().split(",")));
+        }
+
+        return ApiResponse.success(response);
+    }
+
 }

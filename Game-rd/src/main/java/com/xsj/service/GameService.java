@@ -16,4 +16,7 @@ public interface GameService extends IService<Game> {
 
     @Transactional(rollbackFor = Exception.class)
     void incrementFollowCount(Long gameId);
+
+    @Transactional(rollbackFor = Exception.class)
+    void recordView(Long gameId, Long userId);
 }

@@ -16,12 +16,7 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(BusinessException.class)
-    @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<?> handleBusinessException(BusinessException e) {
-        log.warn("业务异常：{}", e.getMessage(), e);
-        return ApiResponse.error(e.getCode(), e.getMessage());
-    }
+
 
     @ExceptionHandler(AuthenticationException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)

@@ -2,17 +2,14 @@ package com.xsj.mapper;
 
 import com.xsj.entity.Comment;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.xsj.vo.CommentVO;
+import org.apache.ibatis.annotations.Param;
 
-/**
-* @author 28227
-* @description 针对表【comment(评论表)】的数据库操作Mapper
-* @createDate 2026-03-31 10:06:07
-* @Entity com.xsj.pojo.Comment
-*/
+import java.util.List;
+
 public interface CommentMapper extends BaseMapper<Comment> {
 
+    List<CommentVO> selectCommentsWithUser(@Param("gameId") Long gameId);
+
+    List<CommentVO> selectReplies(@Param("parentId") Long parentId);
 }
-
-
-
-
