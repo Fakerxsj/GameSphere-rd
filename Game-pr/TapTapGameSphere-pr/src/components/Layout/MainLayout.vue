@@ -24,29 +24,29 @@ import Header from './Header.vue';
   display: flex;
   height: 100vh;
   width: 100%;
-  
+
   .sidebar-container {
     width: 220px;
-    background-color: #fff;
-    border-right: 1px solid #eee;
+    background-color: #171a21;
+    border-right: 1px solid #2a475e;
     flex-shrink: 0;
     transition: width 0.3s;
   }
-  
+
   .main-container {
     flex: 1;
     display: flex;
     flex-direction: column;
-    background-color: #f5f7fa;
+    background-color: #1b2838;
     overflow: hidden;
-    
+
     .header-container {
       height: 60px;
-      background-color: #fff;
-      box-shadow: 0 1px 4px rgba(0,21,41,.08);
+      background-color: #171a21;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
       z-index: 10;
     }
-    
+
     .app-main {
       flex: 1;
       padding: 20px;

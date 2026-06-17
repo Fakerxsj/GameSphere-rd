@@ -81,4 +81,28 @@
           AND c.status = 1
         ORDER BY c.create_time ASC
     </select>
+
+    <!-- 管理后台帖子列表查询（含分页） -->
+    <select id="selectAdminPosts" resultType="com.xsj.vo.AdminPostVO">
+        SELECT
+        c.id,
+        c.game_id AS gameId,
+        g.name AS gameName,
+        u.nickname AS userNickname,
+        c.content,
+        c.like_count AS likeCount,
+        c.reply_count AS replyCount,
+        c.create_time AS createTime
+        FROM comment c
+        LEFT JOIN user u ON c.user_id = u.id
+        LEFT JOIN game g ON c.game_id = g.id
+        WHERE c.parent_id = 0 AND c.status = 1
+        <if test="gameId != null">
+            AND c.game_id = #{gameId}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            AND c.content LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        ORDER BY c.create_time DESC
+    </select>
 </mapper>

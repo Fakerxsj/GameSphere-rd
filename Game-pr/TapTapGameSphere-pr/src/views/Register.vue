@@ -71,12 +71,72 @@ const handleRegister = async () => {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #f5f7fa;
+  background-color: #1b2838;
+  background-image: radial-gradient(circle at 50% 50%, rgba(102, 192, 244, 0.1) 0%, transparent 50%);
 }
+
 .register-card {
   width: 400px;
-  h2 { text-align: center; margin-bottom: 20px; color: #333; }
-  .full-width { width: 100%; }
-  .links { text-align: center; margin-top: 10px; }
+  padding: 30px;
+  background-color: #16202d;
+  border: 1px solid #2a475e;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+
+  h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #c7d5e0;
+    font-size: 24px;
+    font-weight: 500;
+  }
+
+  .full-width {
+    width: 100%;
+    background: linear-gradient(135deg, #66c0f4 0%, #1a9fff 100%);
+    border: none;
+    font-weight: 500;
+
+    &:hover {
+      background: linear-gradient(135deg, #7dd3ff 0%, #3db3ff 100%);
+      box-shadow: 0 4px 16px rgba(102, 192, 244, 0.4);
+    }
+  }
+
+  .links {
+    text-align: center;
+    margin-top: 15px;
+
+    a {
+      color: #66c0f4;
+      text-decoration: none;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: #7dd3ff;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  :deep(.el-input__wrapper) {
+    background-color: #1b2838;
+    box-shadow: 0 0 0 1px #2a475e inset;
+
+    &:hover {
+      box-shadow: 0 0 0 1px #66c0f4 inset;
+    }
+
+    &.is-focus {
+      box-shadow: 0 0 0 1px #66c0f4 inset;
+    }
+  }
+
+  :deep(.el-input__inner) {
+    color: #c7d5e0;
+  }
+
+  :deep(.el-input__prefix-inner) {
+    color: #66c0f4;
+  }
 }
 </style>

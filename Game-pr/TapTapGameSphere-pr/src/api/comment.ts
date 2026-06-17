@@ -1,20 +1,14 @@
 import request from '@/utils/request';
-
-export interface CommentParams {
-  gameId: number;
-  content: string;
-  parentId?: number;
-  images?: string;
-}
+import type { CommentRequest, CommentVO } from '@/Types/Forum';
 
 export function getGameComments(gameId: number) {
-  return request({
+  return request<CommentVO[]>({
     url: `/comment/game/${gameId}`,
     method: 'get'
   });
 }
 
-export function submitComment(data: CommentParams) {
+export function submitComment(data: CommentRequest) {
   return request({
     url: '/comment/submit',
     method: 'post',
@@ -26,5 +20,26 @@ export function deleteComment(id: number) {
   return request({
     url: `/comment/${id}`,
     method: 'delete'
+  });
+}
+
+export function likeComment(id: number) {
+  return request({
+    url: `/comment/like/${id}`,
+    method: 'post'
+  });
+}
+
+export function unlikeComment(id: number) {
+  return request({
+    url: `/comment/like/${id}`,
+    method: 'delete'
+  });
+}
+
+export function getCommentReplies(parentId: number) {
+  return request<CommentVO[]>({
+    url: `/comment/${parentId}/replies`,
+    method: 'get'
   });
 }

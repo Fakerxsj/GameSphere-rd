@@ -44,7 +44,8 @@ public class SecurityConfig {
                                 new AntPathRequestMatcher("/category/**"),
                                 new AntPathRequestMatcher("/recommendation/**"),
                                 new AntPathRequestMatcher("/file/avatar/**"),
-                                new AntPathRequestMatcher("/file/chat/**")
+                                new AntPathRequestMatcher("/file/chat/**"),
+                                new AntPathRequestMatcher("/admin/init-game-stats")
                         ).permitAll()
                         .anyRequest().authenticated()
                 );

@@ -40,6 +40,10 @@ public class UserBehaviorInterceptor implements HandlerInterceptor {
         if (matcher.find()) {
             Long gameId = Long.parseLong(matcher.group(1));
 
+            // 在异步线程之前提取所有需要的数据，避免异步线程中访问已回收的 request 对象
+            String userAgent = request.getHeader("User-Agent");
+            String ipAddress = getIpAddress(request);
+
             CompletableFuture.runAsync(() -> {
                 try {
                     UserBehavior behavior = new UserBehavior();
@@ -47,8 +51,8 @@ public class UserBehaviorInterceptor implements HandlerInterceptor {
                     behavior.setGameId(gameId);
                     behavior.setBehaviorType("view");
                     behavior.setBehaviorTime(new Date());
-                    behavior.setDevice(request.getHeader("User-Agent"));
-                    behavior.setIpAddress(getIpAddress(request));
+                    behavior.setDevice(userAgent);
+                    behavior.setIpAddress(ipAddress);
 
                     userBehaviorService.save(behavior);
                 } catch (Exception e) {

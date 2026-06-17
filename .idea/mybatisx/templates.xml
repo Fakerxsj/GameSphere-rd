@@ -62,61 +62,13 @@
               </list>
             </option>
             <option name="needsModel" value="true" />
-            <option name="relativePackage" value="pojo" />
+            <option name="relativePackage" value="entity" />
             <option name="superClass" value="" />
             <option name="tableUIInfoList">
               <list>
                 <TableUIInfo>
-                  <option name="className" value="Category" />
-                  <option name="tableName" value="category" />
-                </TableUIInfo>
-                <TableUIInfo>
-                  <option name="className" value="User" />
-                  <option name="tableName" value="user" />
-                </TableUIInfo>
-                <TableUIInfo>
-                  <option name="className" value="SystemLog" />
-                  <option name="tableName" value="system_log" />
-                </TableUIInfo>
-                <TableUIInfo>
-                  <option name="className" value="UserBehavior" />
-                  <option name="tableName" value="user_behavior" />
-                </TableUIInfo>
-                <TableUIInfo>
-                  <option name="className" value="GameTag" />
-                  <option name="tableName" value="game_tag" />
-                </TableUIInfo>
-                <TableUIInfo>
-                  <option name="className" value="Rating" />
-                  <option name="tableName" value="rating" />
-                </TableUIInfo>
-                <TableUIInfo>
-                  <option name="className" value="UserFollow" />
-                  <option name="tableName" value="user_follow" />
-                </TableUIInfo>
-                <TableUIInfo>
-                  <option name="className" value="Comment" />
-                  <option name="tableName" value="comment" />
-                </TableUIInfo>
-                <TableUIInfo>
-                  <option name="className" value="GameTagRelation" />
-                  <option name="tableName" value="game_tag_relation" />
-                </TableUIInfo>
-                <TableUIInfo>
-                  <option name="className" value="Role" />
-                  <option name="tableName" value="role" />
-                </TableUIInfo>
-                <TableUIInfo>
-                  <option name="className" value="RecommendationRecord" />
-                  <option name="tableName" value="recommendation_record" />
-                </TableUIInfo>
-                <TableUIInfo>
-                  <option name="className" value="Game" />
-                  <option name="tableName" value="game" />
-                </TableUIInfo>
-                <TableUIInfo>
-                  <option name="className" value="GameCategory" />
-                  <option name="tableName" value="game_category" />
+                  <option name="className" value="Message" />
+                  <option name="tableName" value="message" />
                 </TableUIInfo>
               </list>
             </option>

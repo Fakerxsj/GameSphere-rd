@@ -16,3 +16,16 @@ export function updateUserInfo(data) {
     data
   });
 }
+
+export function uploadAvatar(file: File) {
+  const formData = new FormData();
+  formData.append('file', file);
+  return request({
+    url: '/file/avatar',
+    method: 'post',
+    data: formData,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
+}

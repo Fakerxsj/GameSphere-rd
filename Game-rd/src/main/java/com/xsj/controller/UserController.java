@@ -1,5 +1,7 @@
 package com.xsj.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xsj.dto.response.ApiResponse;
 import com.xsj.dto.response.PageResponse;
 import com.xsj.dto.response.UserResponse;
@@ -23,6 +25,38 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private final UserService userService;
+
+    @GetMapping("/list")
+    @Operation(summary = "获取用户列表（后台管理）")
+    public ApiResponse<?> getUserList(
+            @RequestParam(defaultValue = "1") Integer pageNum,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(required = false) String keyword
+    ) {
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        if (keyword != null && !keyword.isEmpty()) {
+            wrapper.like(User::getNickname, keyword)
+                    .or()
+                    .like(User::getUsername, keyword);
+        }
+        wrapper.orderByDesc(User::getCreateTime);
+
+        Page<User> page = userService.page(new Page<>(pageNum, pageSize), wrapper);
+
+        List<UserResponse> records = page.getRecords().stream()
+                .map(user -> {
+                    UserResponse response = new UserResponse();
+                    BeanUtils.copyProperties(user, response);
+                    return response;
+                })
+                .collect(Collectors.toList());
+
+        PageResponse<UserResponse> pageResponse = PageResponse.of(
+                records, page.getTotal(), page.getCurrent(), page.getSize()
+        );
+
+        return ApiResponse.success(pageResponse);
+    }
 
     @GetMapping("/info")
     @Operation(summary = "获取当前用户信息")

@@ -7,6 +7,20 @@ export function getHomeRecommendation() {
   });
 }
 
+export function triggerCrawl() {
+  return request({
+    url: '/recommendation/crawl',
+    method: 'post'
+  });
+}
+
+export function getCrawlStatus() {
+  return request({
+    url: '/recommendation/crawl/status',
+    method: 'get'
+  });
+}
+
 export function getSimilarGames(gameId: number) {
   return request({
     url: `/recommendation/similar/${gameId}`,

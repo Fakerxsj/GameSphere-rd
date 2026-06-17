@@ -58,6 +58,7 @@ public class AuthController {
         data.put("username", user.getUsername());
         data.put("nickname", user.getNickname());
         data.put("avatar", user.getAvatar());
+        data.put("roleId", user.getRoleId());
 
         return ApiResponse.success("登录成功", data);
     }

@@ -1,5 +1,6 @@
 package com.xsj.dto.response;
 
+// ... existing code ...
 import lombok.Data;
 import java.math.BigDecimal;
 
@@ -31,6 +32,8 @@ public class GameListResponse {
     private Integer followCount;
 
     private Integer downloadCount;
+
+    private Integer commentCount;
 
     private String briefDescription;
 

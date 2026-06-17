@@ -63,10 +63,16 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment>
             if (comment.getImages() != null && !comment.getImages().isEmpty()) {
                 comment.setImages(parseImages(String.valueOf(comment.getImages())));
             }
+
+            List<CommentVO> replies = getRepliesWithUser(comment.getId());
+            comment.setReplies(replies);
+            comment.setReplyCount(replies.size());
         });
 
         return comments;
     }
+// ... existing code ...
+
 
     @Override
     public List<CommentVO> getRepliesWithUser(Long parentId) {

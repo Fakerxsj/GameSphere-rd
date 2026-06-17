@@ -1,78 +1,120 @@
-import { defineStore } from 'pinia';
-import { ref } from 'vue';
-import { login as apiLogin, logout as apiLogout, getUserInfo } from '@/api/auth';
+import { defineStore } from 'pinia'
+import { ref, computed } from 'vue'
+import { login as apiLogin, logout as apiLogout, getUserInfo } from '@/api/auth'
 
 export interface UserInfo {
-  id: number;
-  username: string;
-  nickname: string;
-  avatar: string;
-  email?: string;
-  role?: number;
+  id: number
+  username: string
+  nickname: string
+  avatar: string
+  email?: string
+  roleId?: number
 }
 
-// 假设登录接口返回的数据结构
 interface LoginResponse {
-  token: string;
+  token: string
+  userId: number
+  username: string
+  nickname: string
+  avatar: string
+  roleId: number
 }
 
 export const useUserStore = defineStore('user', () => {
-  const token = ref<string>(localStorage.getItem('token') || '');
-  const userInfo = ref<UserInfo | null>(null);
+  const token = ref<string>(localStorage.getItem('token') || '')
+  const userInfo = ref<UserInfo | null>(null)
+
+  const savedUserInfo = localStorage.getItem('userInfo')
+  if (savedUserInfo) {
+    try {
+      userInfo.value = JSON.parse(savedUserInfo)
+    } catch (e) {
+      console.error('恢复用户信息失败', e)
+    }
+  }
+
+  const isAdmin = computed(() => {
+    return userInfo.value?.roleId === 1
+  })
+
+  const isNormalUser = computed(() => {
+    return userInfo.value?.roleId === 2
+  })
 
   const setToken = (newToken: string) => {
-    token.value = newToken;
-    localStorage.setItem('token', newToken);
-  };
+    token.value = newToken
+    localStorage.setItem('token', newToken)
+  }
+
+  const setUserInfo = (info: UserInfo | null) => {
+    userInfo.value = info
+    if (info) {
+      localStorage.setItem('userInfo', JSON.stringify(info))
+    } else {
+      localStorage.removeItem('userInfo')
+    }
+  }
 
   const login = async (username: string, password: string) => {
     try {
-      // 修复：Axios 返回的是 AxiosResponse，实际数据在 .data 中
-      const response = await apiLogin({ username, password });
-      // 假设 apiLogin 返回的是 AxiosResponse<LoginResponse>
-      // 如果 apiLogin 已经经过拦截器处理直接返回 data，则无需 .data
-      // 这里按照标准 Axios 行为处理，即 response.data 才是后端返回的业务数据
-      const loginData = response.data as LoginResponse; 
-      
+      const loginData = await apiLogin({ username, password }) as unknown as LoginResponse
+
       if (loginData && loginData.token) {
-        setToken(loginData.token);
-        await getInfo();
+        setToken(loginData.token)
+        setUserInfo({
+          id: loginData.userId,
+          username: loginData.username,
+          nickname: loginData.nickname || loginData.username,
+          avatar: loginData.avatar || '',
+          roleId: loginData.roleId
+        })
       } else {
-        throw new Error('登录失败：未获取到 token');
+        throw new Error('登录失败：未获取到 token')
       }
     } catch (error) {
-      return Promise.reject(error);
+      return Promise.reject(error)
     }
-  };
+  }
 
   const getInfo = async () => {
     try {
-      const response = await getUserInfo();
-      // 同样处理 getUserInfo 的返回值
-      userInfo.value = response.data as UserInfo;
+      const info = await getUserInfo() as unknown as UserInfo
+      setUserInfo(info)
     } catch (error) {
-      return Promise.reject(error);
+      setToken('')
+      setUserInfo(null)
+      return Promise.reject(error)
     }
-  };
+  }
 
   const logout = async () => {
     try {
-      await apiLogout();
+      await apiLogout()
     } catch (e) {
-      console.error(e);
+      console.error(e)
     } finally {
-      token.value = '';
-      userInfo.value = null;
-      localStorage.removeItem('token');
+      setToken('')
+      setUserInfo(null)
     }
-  };
+  }
+
+  const updateAvatar = (avatarUrl: string) => {
+    if (userInfo.value) {
+      userInfo.value.avatar = avatarUrl
+      setUserInfo(userInfo.value)
+    }
+  }
 
   return {
     token,
     userInfo,
+    isAdmin,
+    isNormalUser,
     login,
     getInfo,
     logout,
-    setToken
-  };
-});
+    setToken,
+    setUserInfo,
+    updateAvatar
+  }
+})
